@@ -1,22 +1,11 @@
 <?php
+	 include 'db_config.php';
+	
 	session_start();
 
-	function pdo_connect_mysql() {
-	    // Update the details below with your MySQL details
-	    $DATABASE_HOST = 'localhost';
-	    $DATABASE_USER = 'root';
-	    $DATABASE_PASS = '';
-	    $DATABASE_NAME = 'frimage';
-	    try {
-	    	return new PDO('mysql:host=' . $DATABASE_HOST . ';dbname=' . $DATABASE_NAME . ';charset=utf8', $DATABASE_USER, $DATABASE_PASS);
-	    } catch (PDOException $exception) {
-	    	// If there is an error with the connection, stop the script and display the error.
-	    	die ('Failed to connect to database!');
-	    }
-	}
+   
 
-	// connect to database
-	$db = mysqli_connect('localhost', 'root', '', 'frimage');
+
 
 	// variable declaration
 	$username = "";
@@ -50,21 +39,29 @@
 		$password_2  =  e($_POST['password_2']);
 
 		// form validation: ensure that the form is correctly filled
-		if (empty($username)) {
-			array_push($errors, "Username is required");
+		if (empty($username) ) {
+			echo '<script language="javascript">';
+            echo 'alert("Please upload image.")';
+            echo '</script>';
 		}
 		if (empty($email)) {
-			array_push($errors, "Email is required");
+			echo '<script language="javascript">';
+            echo 'alert("Email is required.")';
+            echo '</script>';
 		}
-		if (empty($password_1)) {
-			array_push($errors, "Password is required");
+		if (empty($password_1) || $password_1 < 2 ) {
+			echo '<script language="javascript">';
+            echo 'alert("Password is required.")';
+            echo '</script>';
 		}
 		if ($password_1 != $password_2) {
-			array_push($errors, "The two passwords do not match");
+			echo '<script language="javascript">';
+            echo 'alert("Password is required.")';
+            echo '</script>';
 		}
 
 		// register user if there are no errors in the form
-		if (count($errors) == 0) {
+		
 			$password = md5($password_1);//encrypt the password before saving in the database
 
 			if (isset($_POST['user_type'])) {
@@ -87,7 +84,7 @@
 				header('location: index.php');
 			}
 
-		}
+		
 
 	}
 
@@ -111,14 +108,18 @@
 
 		// make sure form is filled properly
 		if (empty($username)) {
-			array_push($errors, "Username is required");
+			echo '<script language="javascript">';
+            echo 'alert("Please fill username.")';
+            echo '</script>';
 		}
 		if (empty($password)) {
-			array_push($errors, "Password is required");
+			echo '<script language="javascript">';
+            echo 'alert("Please fill password.")';
+            echo '</script>';
 		}
 
 		// attempt login if no errors on form
-		if (count($errors) == 0) {
+		
 			$password = md5($password);
 
 			$query = "SELECT * FROM users WHERE username='$username' AND password='$password' LIMIT 1";
@@ -149,7 +150,7 @@ echo '</script>';
 
 			}
 		}
-	}
+	
 
 	function isLoggedIn()
 	{
@@ -175,16 +176,8 @@ echo '</script>';
 		return mysqli_real_escape_string($db, trim($val));
 	}
 
-	function display_error() {
-		global $errors;
 
-		if (count($errors) > 0){
-			echo '<div class="error">';
-				foreach ($errors as $error){
-					echo $error .'<br>';
-				}
-			echo '</div>';
-		}
-	}
+
+
 
 ?>
